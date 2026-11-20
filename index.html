@@ -255,6 +255,24 @@ body.onboarding .app{grid-template-columns:1fr}
   .sec .span2{grid-column:1/-1}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* about */
+.about .who{display:flex;align-items:center;gap:14px}
+.mono{flex:none;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-size:22px;color:#1a1405;background:linear-gradient(160deg,var(--gold-2),var(--gold) 60%,var(--gold-deep));box-shadow:0 0 18px rgba(224,185,119,.35)}
+.about .nm{font-size:26px!important}
+.about .tl{color:var(--gold);font-size:14px;font-weight:600}
+.story{display:flex;flex-direction:column;gap:12px;font-size:16px;line-height:1.75;color:#dfe2ee}
+.story p{margin:0}
+.story .closing{font-family:var(--font-display);font-size:21px;line-height:1.5;color:var(--gold-2);border-inline-start:2px solid var(--gold);padding-inline-start:12px}
+.share{align-items:center;text-align:center}
+.qr{background:#fff;border-radius:16px;padding:12px;box-shadow:0 0 0 1px var(--line),0 10px 30px rgba(0,0,0,.35)}
+.qr img{display:block;width:180px;height:180px}
+.lnk{color:var(--gold-2);font-weight:700;letter-spacing:.02em}
+.contact .person{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:17px}
+.contact .person span{font-variant-numeric:tabular-nums;color:var(--gold-2);font-weight:700}
+.btn.wa{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#1f8f55;border-color:#1f8f55;color:#fff}
+.btn.wa svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabbar a{padding:4px 8px}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -265,6 +283,7 @@ body.onboarding .app{grid-template-columns:1fr}
     <a href="#today" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>היום</a>
     <a href="#dashboard" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>דשבורד</a>
     <a href="#settings" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>הגדרות</a>
+    <a href="#about" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>אודות</a>
     <div class="foot">כָּךְ וְכָךְ<br>בְּכָל יוֹם<br>וְלֹא יַעֲבֹר</div>
   </aside>
 
@@ -338,6 +357,34 @@ body.onboarding .app{grid-template-columns:1fr}
       </div>
     </div>
 
+    <div class="sec" id="viewAbout" hidden>
+      <div class="card span2 about">
+        <div class="who">
+          <div class="mono" aria-hidden="true">י״ש</div>
+          <div><h2 class="nm">יחיאל שטינמץ</h2><div class="tl">אברך ביום · אבא בצהריים · מאמן זוגי בלילה</div></div>
+        </div>
+        <h2>על המיזם</h2>
+        <div class="story">
+          <p>הכול התחיל בתקופה שבה הייתי פחות מחובר ללימוד, בעל בית סטנדרטי, מה שנקרא. גם כשנקלעתי מדי פעם לבית הכנסת חמש דקות לפני התפילה, הייתי עומד מול ארון הספרים ולא יודע מה לפתוח. כל כך הרבה ספרים, כל כך הרבה אפשרויות, ואף אחד מהם לא באמת שלי. עד שהחלטתי, הזמן כבר עבר ולא הספקתי כלום.</p>
+          <p>הכול השתנה כשהתחלתי לקבוע לעצמי סדרי לימוד קבועים. גם בימים שאני לא עומד בכל מה שהצבתי לעצמי, נשאר לי קשר חי לספרים האלה. וכשמתפנות לי חמש דקות, אני יודע בדיוק מה לפתוח ו״לחטוף״ עוד קצת.</p>
+          <p>הסיפוק הגדול מגיע אחרי כמה ימים, כשאני מסתכל אחורה ורואה שאף יום לא היה מושלם, ובכל זאת התקדמתי בהרבה תחומים ולמדתי המון דברים חדשים. זה שווה הכול.</p>
+          <p class="closing">תתחילו בקטן, בלי שום מחויבות, ולאט לאט תראו איך מתחדשים לכם רצון וזמן בחיים לעוד השקעה רוחנית.</p>
+        </div>
+      </div>
+      <div class="card share">
+        <h2>שתפו את האפליקציה</h2>
+        <div class="qr"><img src="qr.png" alt="ברקוד לאפליקציה: tinyurl.com/Nichsafti" width="180" height="180"></div>
+        <div class="lnk" dir="ltr">tinyurl.com/Nichsafti</div>
+        <button type="button" class="btn gold" id="shareBtn">שליחת הקישור</button>
+      </div>
+      <div class="card contact">
+        <h2>יצירת קשר</h2>
+        <p class="note">להערות, הארות והצעות לשיפור:</p>
+        <div class="person"><b>יחיאל שטינמץ</b><span dir="ltr">058-4003009</span></div>
+        <a class="btn wa" href="https://wa.me/972584003009" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5z"/><path d="M9 9.2c.3 2.2 2.4 4.5 4.8 4.9l1-1.1 1.7.8"/></svg>שליחת הודעה בוואטסאפ</a>
+      </div>
+    </div>
+
   <main id="viewWizard" hidden>
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="wizHead">
@@ -355,6 +402,7 @@ body.onboarding .app{grid-template-columns:1fr}
   <a href="#today" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>היום</a>
   <a href="#dashboard" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>דשבורד</a>
   <a href="#settings" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>הגדרות</a>
+  <a href="#about" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>אודות</a>
 </nav>
 
 <div class="toast" id="toast" role="status" hidden></div>

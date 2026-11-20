@@ -1,6 +1,6 @@
 // Offline support: serve the app shell from cache, refresh it in the background.
-const CACHE = 'seder-limud-v2';
-const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const CACHE = 'seder-limud-v3';
+const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './qr.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });

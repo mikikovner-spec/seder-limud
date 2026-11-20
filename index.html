@@ -273,13 +273,56 @@ body.onboarding .app{grid-template-columns:1fr}
 .btn.wa{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:#1f8f55;border-color:#1f8f55;color:#fff}
 .btn.wa svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tabbar a{padding:4px 8px}
+
+/* brand */
+@font-face{font-family:"Noa Shalev";src:url("noa-shalev.woff2") format("woff2"),url("noa-shalev.woff") format("woff");font-weight:400;font-style:normal;font-display:swap}
+:root{--font-brand:"Noa Shalev","Bellefair",serif}
+.aboutNext{position:sticky;bottom:12px;z-index:5}
+.aboutNext .btn{display:block;text-align:center;text-decoration:none;font-size:18px;padding:15px}
+.brand .brandTxt{font-family:var(--font-brand);font-size:34px;line-height:1;letter-spacing:0;color:var(--gold-2);text-shadow:0 2px 14px rgba(0,0,0,.35)}
+.topbar .brand svg{width:42px;height:42px;stroke-width:1.6}
+.rail .brand .brandTxt{font-size:30px}
+/* sky overlays per time of day */
+.hero[data-phase="morning"]::after{background:linear-gradient(270deg,rgba(9,24,58,.62) 0%,rgba(9,24,58,.22) 55%,rgba(9,24,58,0) 80%),linear-gradient(0deg,rgba(7,14,34,.9),transparent 42%)}
+.hero[data-phase="afternoon"]::after{background:linear-gradient(270deg,rgba(40,24,6,.6) 0%,rgba(40,24,6,.2) 55%,rgba(40,24,6,0) 80%),linear-gradient(0deg,rgba(7,14,34,.9),transparent 42%)}
+.hero[data-phase="evening"]::after{background:linear-gradient(270deg,rgba(4,20,22,.75) 0%,rgba(4,20,22,.3) 55%,rgba(4,20,22,0) 80%),linear-gradient(0deg,rgba(7,14,34,.9),transparent 45%)}
+/* floating cards */
+.card,.dayC{background:linear-gradient(165deg,rgba(30,46,98,.66),rgba(12,22,54,.82));border:1px solid rgba(226,190,128,.16);box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 18px 40px -14px rgba(0,0,0,.65),0 6px 14px -6px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.02);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .25s ease,box-shadow .25s ease}
+.card{border-radius:22px}
+@media (hover:hover){.card:hover{transform:translateY(-3px);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 26px 50px -16px rgba(0,0,0,.7),0 0 0 1px rgba(226,190,128,.22)}}
+.sec{gap:18px}
+/* donuts */
+.pies{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px}
+.pie{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.pie h3{margin:0;font-size:14px;font-weight:700;color:var(--gold-2)}
+.pieFig{position:relative;width:140px;height:140px}
+.pieFig svg{width:100%;height:100%}
+.pieFig .seg{transition:opacity .2s;cursor:pointer;outline:none}
+.pieFig .seg.dim{opacity:.3}
+.pieMid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.pieMid b{font-family:var(--font-display);font-size:26px;font-weight:400;line-height:1}
+.pieMid span{font-size:11px;color:var(--muted)}
+.pieTip{font-size:13px;font-weight:700;background:rgba(7,14,34,.9);border:1px solid var(--line);padding:4px 10px;border-radius:10px}
+.pieLeg{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;width:100%;max-width:200px;font-size:13px}
+.pieLeg li{display:grid;grid-template-columns:12px 1fr auto;gap:8px;align-items:center;text-align:start}
+.pieLeg i{width:12px;height:12px;border-radius:4px}
+.pieLeg b{font-variant-numeric:tabular-nums}
+/* my learning grid */
+.mine{display:grid!important;grid-template-columns:repeat(4,1fr)!important;grid-auto-flow:row!important;grid-auto-columns:auto!important;gap:14px 8px;overflow:visible!important}
+.lm{font:inherit;color:inherit;background:none;border:0;padding:4px 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;border-radius:14px;transition:transform .2s}
+.lm:active{transform:scale(.94)}
+.lm .disc{width:64px;height:64px;background:radial-gradient(circle at 35% 30%,#2a3d7c,#0d1736);box-shadow:0 0 0 1px var(--line),0 10px 20px -8px rgba(0,0,0,.6)}
+.lm .disc svg{position:absolute;inset:0;width:100%;height:100%;transform:none}
+.lm .disc b{font-variant-numeric:tabular-nums;font-size:16px}
+.lm small{font-size:11.5px}
+@media (prefers-reduced-motion:reduce){.card{transition:none}}
 [hidden]{display:none!important}
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="rail" aria-label="ניווט">
-    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 22h24M8 22a8 8 0 0 1 16 0"/><path d="M16 6v3M6.5 10.5l2 2M25.5 10.5l-2 2M2 17h3M27 17h3"/></svg>סדר הלימוד</div>
+    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 22h24M8 22a8 8 0 0 1 16 0"/><path d="M16 6v3M6.5 10.5l2 2M25.5 10.5l-2 2M2 17h3M27 17h3"/></svg><span class="brandTxt">נכספתי</span></div>
     <a href="#today" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>היום</a>
     <a href="#dashboard" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>דשבורד</a>
     <a href="#settings" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>הגדרות</a>
@@ -292,7 +335,7 @@ body.onboarding .app{grid-template-columns:1fr}
       <canvas id="sky" aria-hidden="true"></canvas>
       <div class="heroIn">
         <div class="topbar">
-          <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 22h24M8 22a8 8 0 0 1 16 0"/><path d="M16 6v3M6.5 10.5l2 2M25.5 10.5l-2 2M2 17h3M27 17h3"/></svg>סדר הלימוד</div>
+          <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 22h24M8 22a8 8 0 0 1 16 0"/><path d="M16 6v3M6.5 10.5l2 2M25.5 10.5l-2 2M2 17h3M27 17h3"/></svg><span class="brandTxt">נכספתי</span></div>
           <a class="iconBtn" id="gear" href="#settings" aria-label="הגדרות" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></a>
         </div>
         <div class="ded" id="dedication" hidden></div>
@@ -352,6 +395,11 @@ body.onboarding .app{grid-template-columns:1fr}
       </div>
       <div class="card span2" id="detail" hidden></div>
       <div class="card span2">
+        <div class="ch"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v9h9"/><path d="M21 12a9 9 0 1 1-9-9"/></svg>פילוחים</h2></div>
+        <div class="pies" id="pies"></div>
+        <div class="note">נגעו בפלח כדי לראות את המספר שלו.</div>
+      </div>
+      <div class="card span2">
         <div class="ch"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V6a2 2 0 0 1 2-2h12v15H6a2 2 0 0 0-2 2"/></svg><span id="mineTitle">הלימודים שלי</span></h2></div>
         <div class="mine" id="mine"></div>
       </div>
@@ -383,6 +431,7 @@ body.onboarding .app{grid-template-columns:1fr}
         <div class="person"><b>יחיאל שטינמץ</b><span dir="ltr">058-4003009</span></div>
         <a class="btn wa" href="https://wa.me/972584003009" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5z"/><path d="M9 9.2c.3 2.2 2.4 4.5 4.8 4.9l1-1.1 1.7.8"/></svg>שליחת הודעה בוואטסאפ</a>
       </div>
+      <div class="span2 aboutNext" id="aboutNext" hidden><a class="btn gold" href="#settings">המשך להגדרות</a></div>
     </div>
 
   <main id="viewWizard" hidden>
@@ -405,6 +454,7 @@ body.onboarding .app{grid-template-columns:1fr}
   <a href="#about" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>אודות</a>
 </nav>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="goldArc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6dfae"/><stop offset="1" stop-color="#b8893f"/></linearGradient></defs></svg>
 <div class="toast" id="toast" role="status" hidden></div>
 <div class="modal" id="modal" hidden><div class="card" role="dialog" aria-modal="true"><p id="modalMsg"></p><div class="actions" id="modalAct"></div></div></div>
 

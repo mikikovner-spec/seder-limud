@@ -1,6 +1,6 @@
-// Offline support: serve the app shell from cache, refresh it in the background.
-const CACHE = 'seder-limud-v3';
-const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './qr.png'];
+// Network first, so everyone gets the latest version as soon as they are online; the cache is the offline fallback.
+const CACHE = 'seder-limud-v4';
+const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './qr.png', './noa-shalev.woff2'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
@@ -10,16 +10,11 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
+  const same = new URL(req.url).origin === location.origin;
   e.respondWith(
-    caches.match(req).then((hit) => {
-      const net = fetch(req).then((res) => {
-        if (res && res.ok && new URL(req.url).origin === location.origin) {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
-        }
-        return res;
-      }).catch(() => hit);
-      return hit || net;
-    })
+    fetch(req).then((res) => {
+      if (res && res.ok && same) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
+      return res;
+    }).catch(() => caches.match(req).then((hit) => hit || caches.match('./index.html')))
   );
 });

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>סדר הלימוד היומי</title>
+<meta name="description" content="מעקב יומי אחר סדר הלימוד: צ׳קליסט, שיעורים יומיים ודשבורד">
+<meta name="theme-color" content="#070e22">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bellefair&family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: dusk over Jerusalem as the hero; below it a "forecast" strip of the week's days, then glass cards — today's list, the trend, the details, a quote plate. Desktop adds a side rail. */
+:root{
+  --bg:#070e22;
+  --bg-2:#0c1736;
+  --glass:rgba(17,29,66,.72);
+  --glass-2:rgba(24,38,84,.78);
+  --ink:#f1ede3;
+  --muted:#9aa3c0;
+  --line:rgba(226,190,128,.18);
+  --gold:#e0b977;
+  --gold-2:#f6dfae;
+  --gold-deep:#9c7637;
+  --font-display:"Bellefair","Frank Ruhl Libre",serif;
+  --font-body:"Assistant","Arial Hebrew",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+html,body{margin:0}
+body{color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;background:radial-gradient(800px 500px at 100% 0%,rgba(224,185,119,.10),transparent 60%),linear-gradient(180deg,var(--bg-2),var(--bg) 70%)}
+.app{display:grid;grid-template-columns:1fr;min-height:100vh}
+.rail{display:none}
+.main{padding:0 0 96px;display:flex;flex-direction:column;gap:14px;min-width:0}
+
+/* hero */
+.hero{position:relative;min-height:400px;overflow:hidden;border-radius:0 0 26px 26px;isolation:isolate}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(270deg,rgba(7,14,34,.82) 0%,rgba(7,14,34,.35) 55%,rgba(7,14,34,0) 80%),linear-gradient(0deg,rgba(7,14,34,.85),transparent 45%)}
+.heroIn{padding:18px 18px 84px;display:flex;flex-direction:column;gap:12px;height:100%;min-height:400px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:19px;letter-spacing:.04em;color:var(--gold-2)}
+.brand svg{width:26px;height:26px;stroke:var(--gold);fill:none;stroke-width:1.5}
+.iconBtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(7,14,34,.55);border:1px solid var(--line);color:var(--ink);backdrop-filter:blur(8px)}
+.iconBtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7}
+.ded{align-self:flex-start;font-size:13px;color:var(--gold-2);border:1px solid var(--line);background:rgba(7,14,34,.5);padding:4px 12px;border-radius:99px;backdrop-filter:blur(6px)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;color:var(--gold);display:flex;align-items:center;gap:10px;margin-top:auto}
+.eyebrow::after{content:"";height:1px;width:40px;background:var(--gold);opacity:.7}
+.hero h1{font-family:var(--font-display);font-weight:400;font-size:40px;line-height:1.1;margin:0;max-width:12ch;text-wrap:balance}
+.hero p{margin:0;color:#cfd3e2;font-size:15px;max-width:34ch}
+.heroStat{display:flex;align-items:center;gap:12px}
+.heroStat .ringSm{width:62px;height:62px}
+.heroStat b{font-family:var(--font-display);font-size:46px;font-weight:400;line-height:1;font-variant-numeric:tabular-nums}
+.heroStat span{display:block;color:#cfd3e2;font-size:13px}
+
+/* week strip */
+.sec{padding:0 16px;display:flex;flex-direction:column;gap:14px}
+.week{display:grid;grid-auto-flow:column;grid-auto-columns:88px;gap:8px;overflow-x:auto;padding:2px 16px 6px;scrollbar-width:none;margin-top:-58px;position:relative;z-index:2}
+.week::-webkit-scrollbar{display:none}
+.dayC{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:10px 10px 12px;display:flex;flex-direction:column;gap:4px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.dayC.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset,0 8px 24px rgba(224,185,119,.18);background:linear-gradient(180deg,rgba(224,185,119,.16),var(--glass))}
+.dayC .dn{font-weight:700;font-size:14px}
+.dayC .hd{font-size:11px;color:var(--muted)}
+.dayC .ic{width:26px;height:26px;margin:4px 0}
+.dayC .pc{font-family:var(--font-display);font-size:22px;line-height:1}
+.dayC .pc small{font-family:var(--font-body);font-size:11px;color:var(--muted)}
+
+.card{background:linear-gradient(165deg,var(--glass-2),rgba(10,19,46,.9));border:1px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ch h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:21px;display:flex;align-items:center;gap:8px}
+.ch h2 svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.7}
+.tabs{display:flex;gap:2px;background:rgba(255,255,255,.05);border-radius:99px;padding:3px}
+.tabs button{font:inherit;font-size:12px;font-weight:700;border:0;background:transparent;color:var(--muted);padding:4px 11px;border-radius:99px}
+.tabs button.on{background:rgba(224,185,119,.18);color:var(--gold-2)}
+
+ul.tasks{list-style:none;margin:0;padding:0}
+ul.tasks li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid rgba(255,255,255,.06)}
+ul.tasks li:first-child{border-top:0}
+.box{flex:none;width:26px;height:26px;border-radius:8px;border:1.5px solid rgba(224,185,119,.55);display:grid;place-items:center}
+.box svg{width:16px;height:16px;stroke:#1a1405;stroke-width:3;fill:none;opacity:0}
+li.done .box{background:linear-gradient(160deg,var(--gold-2),var(--gold) 60%,var(--gold-deep));border-color:var(--gold);box-shadow:0 0 12px rgba(224,185,119,.4)}
+li.done .box svg{opacity:1}
+li.done .tn{color:var(--muted)}
+.tx{display:flex;flex-direction:column;min-width:0}
+.tn{font-weight:600}
+.tp{font-family:var(--font-display);color:var(--gold);font-size:15px}
+.tag{font-size:11px;font-weight:700;color:var(--muted);border:1px solid rgba(255,255,255,.14);border-radius:99px;padding:0 7px;margin-inline-start:6px}
+
+.trend svg{width:100%;height:170px;display:block}
+.axis{font-size:10px;fill:var(--muted);font-family:var(--font-body)}
+
+.details{display:flex;flex-direction:column}
+.dRow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-top:1px solid rgba(255,255,255,.06);font-size:14px}
+.dRow:first-child{border-top:0}
+.dRow span{display:flex;align-items:center;gap:9px;color:#cfd3e2}
+.dRow svg{width:17px;height:17px;stroke:var(--gold);fill:none;stroke-width:1.6}
+.dRow b{font-variant-numeric:tabular-nums;font-weight:700}
+
+.quoteC{position:relative;overflow:hidden;min-height:230px;padding:0;isolation:isolate}
+.quoteC canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+.quoteC::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(7,14,34,.9),rgba(7,14,34,.25) 70%)}
+.qIn{padding:18px;display:flex;flex-direction:column;gap:8px;height:100%;min-height:230px;justify-content:flex-end}
+.qIn .ey{font-size:11px;letter-spacing:.2em;color:var(--gold-2);font-weight:700}
+.qIn blockquote{margin:0;font-family:var(--font-display);font-size:21px;line-height:1.55}
+.qIn .src{color:var(--gold);font-size:13px}
+.qIn .src::before{content:"";display:inline-block;width:26px;height:1px;background:var(--gold);vertical-align:middle;margin-inline-end:8px}
+
+.mine{display:grid;grid-auto-flow:column;grid-auto-columns:76px;gap:10px;overflow-x:auto;scrollbar-width:none}
+.mine::-webkit-scrollbar{display:none}
+.lm{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.lm .disc{width:58px;height:58px;border-radius:50%;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#2a3d7c,#0d1736);box-shadow:0 0 0 1px var(--line)}
+.lm .disc svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.lm .disc b{font-family:var(--font-display);font-size:17px;font-weight:400}
+.lm small{font-size:12px;line-height:1.25;color:#cfd3e2}
+
+.tabbar{position:fixed;inset-inline:12px;bottom:12px;display:flex;justify-content:space-around;background:rgba(10,18,44,.82);border:1px solid var(--line);border-radius:20px;padding:8px 6px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:10}
+.tabbar a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--muted);text-decoration:none;font-weight:700;padding:4px 10px;border-radius:12px}
+.tabbar a svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7}
+.tabbar a.on{color:#1a1405;background:linear-gradient(180deg,var(--gold-2),var(--gold))}
+
+
+/* today card */
+.progress{display:flex;flex-direction:column;gap:8px}
+.progress-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.big{font-family:var(--font-display);font-size:26px;font-variant-numeric:tabular-nums}
+.track{height:8px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold),var(--gold-2));border-radius:99px;width:0;transition:width .25s;box-shadow:0 0 12px rgba(224,185,119,.45)}
+.note,.hint{color:var(--muted);font-size:14px}
+.warn{background:rgba(240,163,106,.12);border:1px solid #f0a36a;border-radius:12px;padding:10px 12px;font-size:14px}
+ul.tasks li.empty{color:var(--muted)}
+label.task{display:flex;align-items:center;gap:12px;cursor:pointer;width:100%}
+label.task input{position:absolute;opacity:0;width:1px;height:1px}
+label.task.locked{cursor:default}
+input:checked+.box{background:linear-gradient(160deg,var(--gold-2),var(--gold) 60%,var(--gold-deep));border-color:var(--gold);box-shadow:0 0 12px rgba(224,185,119,.4)}
+input:checked+.box svg{opacity:1}
+input:checked~.txt .name{color:var(--muted)}
+input:disabled+.box{opacity:.6}
+input:focus-visible+.box,a:focus-visible,button:focus-visible,textarea:focus-visible,input[type=text]:focus-visible,input[type=time]:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+.txt{display:flex;flex-direction:column;min-width:0}
+.name{font-weight:600;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.sub{font-family:var(--font-display);color:var(--gold);font-size:15px}
+.opt,.ontime,.late{font-size:11px;font-weight:700;border-radius:99px;padding:0 8px;border:1px solid;white-space:nowrap}
+.opt{color:var(--muted);border-color:rgba(255,255,255,.14)}
+.ontime{color:var(--gold-2);border-color:rgba(246,223,174,.5)}
+.late{color:var(--gold);border-color:var(--gold);background:rgba(224,185,119,.1)}
+.dayC{font:inherit;color:inherit;text-align:start;cursor:pointer}
+.dayC.sel{outline:2px solid var(--gold-2);outline-offset:2px}
+.dayC .ic{display:block;width:26px;height:26px;margin:4px 0}
+.dayC .ic svg{width:26px;height:26px}
+.axis.big{font-size:13px}
+.lm .disc svg{transform:none}
+.heroStat .ringSm svg{width:62px;height:62px}
+.ded{max-width:100%}
+
+/* buttons and forms */
+.btn{font:inherit;font-weight:700;font-size:16px;padding:12px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);cursor:pointer}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.16)}
+.btn.gold{background:linear-gradient(180deg,var(--gold-2),var(--gold) 55%,var(--gold-deep));color:#1a1405;border:0;box-shadow:0 6px 20px rgba(224,185,119,.28)}
+.mini{font:inherit;font-size:13px;font-weight:700;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);cursor:pointer;min-width:36px}
+.mini:disabled{opacity:.3;cursor:default}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions .btn{flex:1;min-width:140px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-weight:700}
+input[type=text],input[type=time],textarea{font:inherit;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(7,14,34,.6);color:var(--ink);width:100%}
+input[type=time]{color-scheme:dark}
+textarea{resize:vertical}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{font:inherit;font-weight:600;text-align:start;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);cursor:pointer}
+.choice[aria-checked="true"]{border-color:var(--gold);background:rgba(224,185,119,.12);box-shadow:inset 0 0 0 1px var(--gold)}
+.lead{margin:0;font-size:16px;color:#d8dbe8}
+.card h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:21px}
+.addRow{display:flex;gap:8px}.addRow input{flex:1}
+li.customRow{justify-content:space-between}
+.cfgList{display:flex;flex-direction:column;gap:10px}
+.cfg{background:linear-gradient(165deg,var(--glass-2),rgba(10,19,46,.9));border:1px solid var(--line);border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.cfgTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cfgName{font-weight:700}
+.moves{display:flex;gap:6px}
+.seg{display:flex;gap:2px;background:rgba(255,255,255,.05);border-radius:99px;padding:3px;align-self:flex-start}
+.seg button{font:inherit;font-size:13px;font-weight:700;border:0;background:transparent;color:var(--muted);padding:5px 16px;border-radius:99px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:rgba(224,185,119,.2);color:var(--gold-2)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.day{font:inherit;font-size:13px;font-weight:700;padding:7px 0;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+.day[aria-pressed="true"]{background:linear-gradient(180deg,var(--gold-2),var(--gold));color:#1a1405;border-color:var(--gold)}
+.timeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wizHead{display:flex;flex-direction:column;gap:10px}
+.wizHead h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:30px}
+.steps{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.stp{font:inherit;font-size:12px;font-weight:700;white-space:nowrap;padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted)}
+.stp.on{background:linear-gradient(180deg,var(--gold-2),var(--gold));color:#1a1405;border-color:var(--gold)}
+.stp.done{color:var(--gold-2)}
+.stp:not(:disabled){cursor:pointer}
+.wizNav{position:sticky;bottom:0;display:flex;gap:8px;padding:12px 0 calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 35%)}
+.wizNav .btn{flex:1}
+#viewWizard{padding:0 16px}
+
+/* calendar and day detail */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal .dow{text-align:center;font-size:12px;color:var(--muted);font-weight:700}
+.cal button{font:inherit;aspect-ratio:1;border-radius:11px;border:1px solid transparent;background:rgba(255,255,255,.05);color:var(--ink);font-size:13px;font-variant-numeric:tabular-nums;cursor:pointer;padding:0;display:grid;place-items:center;position:relative}
+.cal button.full{background:linear-gradient(160deg,var(--gold-2),var(--gold) 55%,var(--gold-deep));color:#1a1405;font-weight:700;box-shadow:0 0 12px rgba(224,185,119,.3)}
+.cal button.partial{background:rgba(224,185,119,calc(.08 + var(--p) * .0035));border-color:rgba(224,185,119,.5);color:var(--gold-2)}
+.cal button.none{background:transparent;border:1px dashed #3a4777;color:var(--muted)}
+.cal button.future{background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--muted)}
+.cal button.hasLate::after{content:"";position:absolute;top:4px;inset-inline-end:4px;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff}
+.cal button.sel{outline:2px solid var(--gold-2);outline-offset:2px}
+.cal .pad{visibility:hidden}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+ul.view{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font-size:15px}
+ul.view li{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+ul.view li.no{color:var(--muted)}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:700;color:#1a1405}
+.pill.full{background:linear-gradient(180deg,var(--gold-2),var(--gold))}.pill.partial{background:#b08548}.pill.none{background:#3a4777;color:var(--ink)}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+
+.toast{position:fixed;inset-inline:16px;bottom:calc(92px + env(safe-area-inset-bottom));margin:0 auto;max-width:420px;background:var(--gold-2);color:#1a1405;padding:12px 16px;border-radius:14px;text-align:center;font-weight:700;z-index:30;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.modal{position:fixed;inset:0;background:rgba(3,7,20,.7);display:grid;place-items:center;padding:16px;z-index:40}
+.modal .card{max-width:420px;width:100%}
+.modal p{margin:0}
+body.onboarding .tabbar,body.onboarding .rail{display:none}
+body.onboarding .app{grid-template-columns:1fr}
+@media (max-width:380px){.timeGrid{grid-template-columns:1fr}.hero h1{font-size:34px}}
+@media (min-width:960px){
+  #viewWizard{padding:0;max-width:720px}
+  .toast{bottom:24px}
+}
+@media (min-width:960px){
+  .app{grid-template-columns:220px 1fr}
+  .rail{display:flex;flex-direction:column;gap:6px;padding:22px 14px;border-inline-start:1px solid var(--line);background:rgba(7,14,34,.6);position:sticky;top:0;height:100vh}
+  .rail .brand{flex-direction:column;margin-bottom:22px}
+  .rail .brand svg{width:34px;height:34px}
+  .rail a{display:flex;align-items:center;gap:10px;color:var(--muted);text-decoration:none;padding:9px 12px;border-radius:12px;font-weight:600}
+  .rail a svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
+  .rail a.on{background:rgba(224,185,119,.16);color:var(--gold-2)}
+  .rail .foot{margin-top:auto;color:var(--muted);font-family:var(--font-display);font-size:15px;line-height:1.4}
+  .tabbar{display:none}
+  .main{padding:16px 20px 30px}
+  .hero{border-radius:24px}
+  .heroIn{padding:26px 30px 90px}
+  .hero h1{font-size:54px}
+  .topbar .brand{visibility:hidden}
+  .cal{max-width:460px}
+  .mine{grid-auto-flow:row;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));grid-auto-columns:auto;overflow:visible}
+  .tabbar{display:none}
+  .week{grid-auto-flow:row;grid-template-columns:repeat(7,1fr);grid-auto-columns:auto;margin-top:-62px;padding:0 20px}
+  .sec{padding:0;display:grid;grid-template-columns:1.25fr 1fr;align-items:start}
+  .sec .span2{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail" aria-label="ניווט">
+    <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 22h24M8 22a8 8 0 0 1 16 0"/><path d="M16 6v3M6.5 10.5l2 2M25.5 10.5l-2 2M2 17h3M27 17h3"/></svg>סדר הלימוד</div>
+    <a href="#today" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>היום</a>
+    <a href="#dashboard" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>דשבורד</a>
+    <a href="#settings" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>הגדרות</a>
+    <div class="foot">כָּךְ וְכָךְ<br>בְּכָל יוֹם<br>וְלֹא יַעֲבֹר</div>
+  </aside>
+
+  <div class="main">
+    <section class="hero">
+      <canvas id="sky" aria-hidden="true"></canvas>
+      <div class="heroIn">
+        <div class="topbar">
+          <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 22h24M8 22a8 8 0 0 1 16 0"/><path d="M16 6v3M6.5 10.5l2 2M25.5 10.5l-2 2M2 17h3M27 17h3"/></svg>סדר הלימוד</div>
+          <a class="iconBtn" id="gear" href="#settings" aria-label="הגדרות" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></a>
+        </div>
+        <div class="ded" id="dedication" hidden></div>
+        <div class="eyebrow" id="eyebrow"></div>
+        <h1 id="greet"></h1>
+        <p>וְאָמַר: נִכְסַפְתִּי מְאֹד לְהַמְשִׁיךְ אֶת הָעוֹלָם אֶל עֲשִׂיָּה, שֶׁיִּהְיֶה חִיּוּב אֵצֶל כָּל אֶחָד וְאֶחָד לִלְמוֹד כָּךְ וְכָךְ בְּכָל יוֹם וְלֹא יַעֲבֹר <span style="color:var(--gold)">(שיחות הר״ן, י״ט)</span></p>
+        <div class="heroStat" id="heroStat" hidden>
+          <span class="ringSm" id="heroRing"></span>
+          <div><b id="heroNum"></b><span id="heroLbl"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="week" id="week" hidden></div>
+
+    <div class="sec" id="viewToday" hidden>
+      <div class="card span2">
+        <div class="ch"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M9 10h6M9 14h6"/></svg>הלימוד של היום</h2><span class="tag">נשמר אוטומטית</span></div>
+        <div class="progress">
+          <div class="progress-top"><span class="big" id="countBig"></span><span class="note" id="stateNote"></span></div>
+          <div class="track"><div class="fill" id="fillToday"></div></div>
+        </div>
+        <div class="warn" id="storageWarn" hidden>הדפדפן לא מאפשר לשמור נתונים. ייתכן שהוא במצב גלישה פרטית.</div>
+        <ul class="tasks" id="taskList"></ul>
+        <div class="note">משימות רשות לא נספרות באחוזים.</div>
+      </div>
+      <div class="card quoteC span2">
+        <canvas id="night" aria-hidden="true"></canvas>
+        <div class="qIn">
+          <div class="ey">דבר ליום</div>
+          <blockquote>״אִם אַתָּה מַאֲמִין שֶׁיְּכוֹלִין לְקַלְקֵל, תַּאֲמִין שֶׁיְּכוֹלִין לְתַקֵּן״</blockquote>
+          <div class="src">ליקוטי מוהר״ן תניינא, קי״ב</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" id="viewDash" hidden>
+      <div class="card trend">
+        <div class="ch"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>מגמת ביצוע</h2>
+          <div class="tabs" role="group" aria-label="טווח ימים"><button type="button" data-range="7" id="r7">שבוע</button><button type="button" data-range="30" id="r30">חודש</button><button type="button" data-range="0" id="rAll">הכול</button></div></div>
+        <svg id="trend" viewBox="0 0 340 170" role="img" aria-label="אחוז הביצוע לאורך זמן"></svg>
+      </div>
+      <div class="card">
+        <div class="ch"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>פרטי התקופה</h2></div>
+        <div class="details" id="details"></div>
+      </div>
+      <div class="card span2">
+        <div class="ch"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>לוח ימים</h2></div>
+        <div class="note">לחצו על יום כדי לראות מה בוצע בו ולסמן השלמות.</div>
+        <div class="cal" id="cal"></div>
+        <div class="legend">
+          <span><i style="background:linear-gradient(160deg,var(--gold-2),var(--gold))"></i>כל משימות החובה</span>
+          <span><i style="background:rgba(224,185,119,.25);border:1px solid rgba(224,185,119,.5)"></i>חלק מהמשימות</span>
+          <span><i style="border:1px dashed #3a4777"></i>לא סומן</span>
+          <span><i style="background:#fff;border-radius:50%;width:7px;height:7px;box-shadow:0 0 6px #fff"></i>יש השלמות</span>
+        </div>
+      </div>
+      <div class="card span2" id="detail" hidden></div>
+      <div class="card span2">
+        <div class="ch"><h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V6a2 2 0 0 1 2-2h12v15H6a2 2 0 0 0-2 2"/></svg><span id="mineTitle">הלימודים שלי</span></h2></div>
+        <div class="mine" id="mine"></div>
+      </div>
+    </div>
+
+  <main id="viewWizard" hidden>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="wizHead">
+        <h2 id="wizTitle"></h2>
+        <div class="steps" id="wizSteps"></div>
+      </div>
+      <div id="wizBody" style="display:flex;flex-direction:column;gap:14px"></div>
+      <div class="wizNav" id="wizNav"></div>
+    </div>
+  </main>
+  </div>
+</div>
+
+<nav class="tabbar" aria-label="ניווט">
+  <a href="#today" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>היום</a>
+  <a href="#dashboard" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>דשבורד</a>
+  <a href="#settings" data-nav><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>הגדרות</a>
+</nav>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<div class="modal" id="modal" hidden><div class="card" role="dialog" aria-modal="true"><p id="modalMsg"></p><div class="actions" id="modalAct"></div></div></div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -418,7 +418,9 @@ ul.tasks li.secHead+li{border-top:0}
 .regView{position:fixed;inset:0;z-index:30;overflow:auto;background:radial-gradient(120% 70% at 50% 0,#14265a,var(--bg) 62%)}
 body.regMode .main,body.regMode .tabbar,body.regMode .rail{display:none}
 .regIn{max-width:440px;margin:0 auto;padding:28px 16px 40px;display:flex;flex-direction:column;gap:14px}
-.regSun{display:block;margin:0 auto;width:86%;max-width:360px;height:auto;filter:drop-shadow(0 0 22px rgba(240,200,120,.28))}
+.regLogo{display:table;margin:10px auto 0;position:relative}
+.regLogo::before{content:"";position:absolute;inset:-30% -25% 10%;background:radial-gradient(closest-side,rgba(255,170,60,.22),transparent);z-index:-1}
+.regSun{display:block;width:0;min-width:100%;height:auto;filter:drop-shadow(0 0 16px rgba(255,180,80,.35))}
 .regBrand{margin:-2px 0 0;text-align:center;font-family:"Noa Shalev",var(--font-display);font-weight:400;font-size:64px;line-height:1.05;background:linear-gradient(180deg,#fff3cf,#e9c27a 55%,#b98a3a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
 .regLead{margin:0;text-align:center;color:var(--muted)}
 #regFields{gap:12px}
@@ -635,8 +637,7 @@ body.regMode .main,body.regMode .tabbar,body.regMode .rail{display:none}
 
 <div class="regView" id="viewReg" hidden>
   <div class="regIn" id="regForm">
-    <img class="regSun" src="sun-gold.webp" alt="" width="380" height="229">
-    <h1 class="regBrand">נכספתי</h1>
+    <div class="regLogo"><img class="regSun" src="sun-glass.webp" alt="" width="260" height="149"><h1 class="regBrand">נכספתי</h1></div>
     <p class="regLead">ברוכים הבאים! כמה פרטים קצרים ומתחילים.</p>
     <div class="card" id="regFields"></div>
     <button class="btn gold" id="regGo" type="button">המשך</button>

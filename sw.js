@@ -1,5 +1,5 @@
 // Network first, so everyone gets the latest version as soon as they are online; the cache is the offline fallback.
-const CACHE = 'seder-limud-v11';
+const CACHE = 'seder-limud-v12';
 const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './qr.png', './noa-shalev.woff2', './yechiel.webp'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
